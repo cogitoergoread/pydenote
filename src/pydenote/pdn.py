@@ -24,5 +24,5 @@ class NewNote:
         self.at.title = title
 
     def set_keywords(self, keywords: str) -> None:
-        nkw = re.sub("[\x00-\x2F\x3A-\x40\x5B-\x60\x7B-\x7F]+", " ", keywords)
+        nkw = re.sub(r"\W+", " ", keywords).lower().strip()
         self.at.keywords = nkw.split(" ")
