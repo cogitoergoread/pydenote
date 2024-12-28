@@ -27,7 +27,7 @@ pytest = [
 ]
 
 [tool.ruff]
-select = [
+lint.select = [
     "B", # flake8-bugbear
     "C4", # flake8-comprehensions
     "E", # pycodestyle - Error
@@ -36,12 +36,12 @@ select = [
     "W", # pycodestyle - Warning
     "UP", # pyupgrade
 ]
-ignore = [
+lint.ignore = [
     "E501", # line-too-long
     "W191", # tab-indentation
 ]
 include = ["**/*.py", "**/*.pyi", "**/pyproject.toml"]
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.pdm]
@@ -53,7 +53,7 @@ source = "scm"
 [tool.pytest.ini_options]
 log_level = "DEBUG"
 addopts = '''
---cov=tnt
+--cov=pydenote
  --color=yes
  --cov-report=term
  --log-cli-level=DEBUG
@@ -80,3 +80,6 @@ exclude_also = [
 
 [tool.mypy]
 strict = true
+exclude =  [
+    'tests/**/*.py',  # but TOML's single-quoted strings do not
+]
