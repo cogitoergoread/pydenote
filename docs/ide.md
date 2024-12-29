@@ -44,6 +44,15 @@ convention = "google"
 pdm add -dG lint mypy
 ```
 
+It has to be configured to exclude `tests/` in VSCode `settings.json`:
+
+```json
+"mypy-type-checker.ignorePatterns": [
+      "tests/*py"
+    ],
+    "mypy-type-checker.preferDaemon": true,
+    "mypy-type-checker.reportingScope": "workspace"
+```
 
 ## Pre-commit
 
