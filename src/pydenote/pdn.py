@@ -1,9 +1,12 @@
 """Adding new Denote scheme note.
 See original (Emacs lisp) docs at https://protesilaos.com/emacs/denote"""
 
+import argparse
 import re
 from dataclasses import dataclass
 from datetime import datetime
+
+from pydenote.resources.__version__ import __version__ as __version__
 
 
 @dataclass(frozen=False)
@@ -13,19 +16,12 @@ class Attributes:
     date: datetime
     id: str
 
-
-class NewNote:
-    at: Attributes
-
-    def __init__(self) -> None:
-        self.at = Attributes("", [], datetime.now(), "")
-
     def set_title(self, title: str) -> None:
-        self.at.title = title
+        self.title = re.sub(r"\W+", " ", title).strip()
 
     def set_keywords(self, keywords: str) -> None:
         nkw = re.sub(r"\W+", " ", keywords).lower().strip()
-        self.at.keywords = nkw.split(" ")
+        self.keywords = nkw.split(" ")
 
     def set_date(self, pdate: str) -> bool:
         # Better (0[1-9]|1[0-2]) ([0-2][0-9]|3[01])
@@ -38,7 +34,7 @@ class NewNote:
             # Short date found
             dtstr = f"{match.group('year')}-{match.group('month')}-{match.group('day')}"
             try:
-                self.at.date = datetime.strptime(dtstr, "%Y-%m-%d").date()
+                self.date = datetime.strptime(dtstr, "%Y-%m-%d").date()
             except ValueError:
                 return False
             return True
@@ -53,9 +49,75 @@ class NewNote:
             # Date + Time found
             dtstr = f"{match.group('year')}-{match.group('month')}-{match.group('day')} {match.group('hour')}:{match.group('min')}:{match.group('sec')}"
             try:
-                self.at.date = datetime.strptime(dtstr, "%Y-%m-%d %H:%M:%S")
+                self.date = datetime.strptime(dtstr, "%Y-%m-%d %H:%M:%S")
             except ValueError:
                 return False
             return True
 
         return False
+
+    def set_id(self):
+        self.id = self.date.strftime("%Y%m%dT%H%M%S")
+
+    def set_journal(self):
+        self.keywords.append("journal")
+        if len(self.title) == 0:
+            self.set_title(self.date.strftime("%A %d %B %Y"))
+
+
+class NewNote:
+    at: Attributes
+
+    def __init__(self) -> None:
+        self.at = Attributes("", [], datetime.now(), "")
+
+    def main(self):
+        logstr = f"pdn (Python Denote new) version {__version__} starting..."
+        print(logstr)
+        parser = argparse.ArgumentParser(
+            description="Create new denote file.",
+            epilog="New Markdown file is placed to --denote-home or DENOTE_HOME.",
+        )
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument(
+            "-j", "--journal", action="store_true", help="Create Journal entry"
+        )
+        group.add_argument("-t", "--title", type=str, help="Title of a note")
+
+        parser.add_argument(
+            "-k",
+            "--keyword",
+            type=str,
+            help="keywords of a note, comma or whitespace separated string",
+        )
+        parser.add_argument(
+            "-d",
+            "--date",
+            type=str,
+            help="Date and time of a note, eg. 2024-12-31 23:59:59",
+        )
+        args = parser.parse_args()
+        print(args)
+
+        if args.date:
+            if not self.at.set_date(args.date):
+                print(f"Invalid date entered: {args.date}")
+                exit(0)
+        if args.keyword:
+            self.at.set_keywords(args.keyword)
+        if args.title:
+            self.at.set_title(args.title)
+        elif args.journal:
+            self.at.set_journal()
+
+        self.at.set_id()
+        print(f"Ok. At:{self.at}")
+
+
+def main():
+    nn = NewNote()
+    nn.main()
+
+
+if __name__ == "__main__":
+    main()

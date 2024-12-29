@@ -12,7 +12,7 @@ dynamic = ["version"]
 
 
 [build-system]
-requires = ["setuptools>=61", "wheel"]
+requires = ["setuptools>=61", "wheel", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 
@@ -83,3 +83,6 @@ strict = true
 exclude =  [
     'tests/**/*.py',  # but TOML's single-quoted strings do not
 ]
+
+[project.scripts]
+pdn = "pydenote.pdn:main"
