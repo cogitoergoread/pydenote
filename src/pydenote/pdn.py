@@ -34,7 +34,7 @@ class Attributes:
             # Short date found
             dtstr = f"{match.group('year')}-{match.group('month')}-{match.group('day')}"
             try:
-                self.date = datetime.strptime(dtstr, "%Y-%m-%d").date()
+                self.date = datetime.strptime(dtstr, "%Y-%m-%d")
             except ValueError:
                 return False
             return True
@@ -56,13 +56,16 @@ class Attributes:
 
         return False
 
-    def set_id(self):
+    def set_id(self) -> None:
         self.id = self.date.strftime("%Y%m%dT%H%M%S")
 
-    def set_journal(self):
+    def set_journal(self) -> None:
         self.keywords.append("journal")
         if len(self.title) == 0:
             self.set_title(self.date.strftime("%A %d %B %Y"))
+
+    def get_frontmatter(self, istoml: bool = True) -> str:
+        return "Cica"
 
 
 class NewNote:
@@ -71,7 +74,7 @@ class NewNote:
     def __init__(self) -> None:
         self.at = Attributes("", [], datetime.now(), "")
 
-    def main(self):
+    def main(self) -> None:
         logstr = f"pdn (Python Denote new) version {__version__} starting..."
         print(logstr)
         parser = argparse.ArgumentParser(
@@ -114,7 +117,7 @@ class NewNote:
         print(f"Ok. At:{self.at}")
 
 
-def main():
+def main() -> None:
     nn = NewNote()
     nn.main()
 

@@ -6,7 +6,5 @@
     "python.testing.pytestEnabled": true,
     "mypy-type-checker.ignorePatterns": [
       "tests/*py"
-    ],
-    "mypy-type-checker.preferDaemon": true,
-    "mypy-type-checker.reportingScope": "workspace"
+    ]
 }

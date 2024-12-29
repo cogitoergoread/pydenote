@@ -80,6 +80,7 @@ exclude_also = [
 
 [tool.mypy]
 strict = true
+mypy_path = "src"
 exclude =  [
     'tests/**/*.py',  # but TOML's single-quoted strings do not
 ]

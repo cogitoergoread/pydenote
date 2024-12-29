@@ -40,5 +40,5 @@ def test_set_id() -> None:
     nn = NewNote()
     assert nn.at.set_date("2024.02.03 12.23:45")
     assert nn.at.date.__str__() == "2024-02-03 12:23:45"
-    _ = nn.at.set_id()
+    nn.at.set_id()
     assert nn.at.id == "20240203T122345"

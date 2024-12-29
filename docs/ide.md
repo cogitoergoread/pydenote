@@ -44,6 +44,17 @@ convention = "google"
 pdm add -dG lint mypy
 ```
 
+Settings for `pyproject.toml`:
+
+```toml
+[tool.mypy]
+strict = true
+mypy_path = "src"
+exclude =  [
+    'tests/**/*.py',  # but TOML's single-quoted strings do not
+]
+```
+
 It has to be configured to exclude `tests/` in VSCode `settings.json`:
 
 ```json
