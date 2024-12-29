@@ -41,6 +41,7 @@ lint.ignore = [
     "W191", # tab-indentation
 ]
 include = ["**/*.py", "**/*.pyi", "**/pyproject.toml"]
+exclude = ["**/__versions__.py"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
@@ -87,3 +88,9 @@ exclude =  [
 
 [project.scripts]
 pdn = "pydenote.pdn:main"
+
+[tool.pdm.scripts]
+lint = "ruff check --exclude '**/__version__.py'"
+fmt = "ruff format --exclude '**/__version__.py'"
+tst = "pytest -s tests/"
+# chk = "mypy 'src/pydenote/**.py' 'tests/**.py'"

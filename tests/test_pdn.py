@@ -22,7 +22,7 @@ def test_set_keywords() -> None:
 def test_set_date() -> None:
     nn = NewNote()
     assert nn.at.set_date("2024.01.02")
-    assert nn.at.date.__str__() == "2024-01-02"
+    assert nn.at.date.__str__() == "2024-01-02 00:00:00"
     assert nn.at.set_date("2024.02.03 12.23:45")
     assert nn.at.date.__str__() == "2024-02-03 12:23:45"
     assert not nn.at.set_date("2024.02.03 12.23:75")
