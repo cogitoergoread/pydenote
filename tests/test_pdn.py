@@ -48,6 +48,15 @@ def test_set_id() -> None:
     assert nn.at.id == "20240203T122345"
 
 
+@pytest.fixture
+def journal() -> NewNote:
+    nn = NewNote()
+    assert nn.at.set_date("2024.02.03 12.23:45")
+    nn.at.set_journal()
+    nn.at.set_id()
+    return nn
+
+
 @pytest.mark.parametrize(
     "ismd,res",
     [
@@ -74,10 +83,11 @@ title: Saturday 03 February 2024
         ),
     ],
 )
-def test_get_frontmatter(ismd: bool, res: str) -> None:
-    nn = NewNote()
-    assert nn.at.set_date("2024.02.03 12.23:45")
-    nn.at.set_journal()
-    nn.at.set_id()
-    ret = nn.at.get_frontmatter(ismd)
+def test_get_frontmatter(ismd: bool, res: str, journal: NewNote) -> None:
+    ret = journal.at.get_frontmatter(ismd)
     assert ret == res
+
+
+def test_get_filename(journal: NewNote) -> None:
+    fname = "20240203T122345--saturday-03-february-2024_journal.md"
+    assert journal.at.get_filename() == fname

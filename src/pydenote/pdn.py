@@ -20,13 +20,31 @@ class Attributes:
     id: str
 
     def set_title(self, title: str) -> None:
+        """Set title attribute and clean the whitespace characters
+
+        Args:
+            title (str): Title string
+        """
         self.title = re.sub(r"\W+", " ", title).strip()
 
     def set_keywords(self, keywords: str) -> None:
+        """Sets Keyword attribut and clean from whitespaces
+
+        Args:
+            keywords (str): _description_
+        """
         nkw = re.sub(r"\W+", " ", keywords).lower().strip()
         self.keywords = nkw.split(" ")
 
     def set_date(self, pdate: str) -> bool:
+        """Checks the 'date' parameter
+
+        Args:
+            pdate (str): Good formatted date, eg 2024-12-24 23:59:59
+
+        Returns:
+            bool: Is pdate valid date
+        """
         # Better (0[1-9]|1[0-2]) ([0-2][0-9]|3[01])
         fp_datum = re.compile(
             r"^(?P<year>\d{4})[\.\- ]?(?P<month>[01]\d)[\.\- ]?(?P<day>[0123]\d)$",
@@ -60,14 +78,24 @@ class Attributes:
         return False
 
     def set_id(self) -> None:
+        """ID is a formatted datetime"""
         self.id = self.date.strftime("%Y%m%dT%H%M%S")
 
     def set_journal(self) -> None:
+        """Journal entries have special title and keyword"""
         self.keywords.append("journal")
         if len(self.title) == 0:
             self.set_title(self.date.strftime("%A %d %B %Y"))
 
     def get_frontmatter(self, istoml: bool = True) -> str:
+        """Create either TOML or YAML formatted front matter
+
+        Args:
+            istoml (bool, optional): Toml (True)/ YAML (False). Defaults to True.
+
+        Returns:
+            str: Pretty formatted frontmatter
+        """
         oudi = {
             "title": self.title,
             "date": self.date.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -79,6 +107,17 @@ class Attributes:
         else:
             rets = f"---\n{yaml.dump(oudi)}---\n"
         return rets
+
+    def get_filename(self) -> str:
+        """Create a filename from the attributes
+        example: 20220610T062201--define-type__denote_emacs_package.md
+
+        Returns:
+            str: Denote filename
+        """
+        stit = re.sub(r"\W+", "-", self.title).lower().strip()
+        skey = "_".join(self.keywords)
+        return f"{self.id}--{stit}_{skey}.md"
 
 
 class NewNote:
