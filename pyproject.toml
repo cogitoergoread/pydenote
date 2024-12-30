@@ -4,7 +4,7 @@ description = "Utilities for Denote naming scheme notes."
 authors = [
     {name = "Joozsef Varga", email = "joozsef@ho.me"},
 ]
-dependencies = []
+dependencies = ["toml>=0.10.2", "types-toml>=0.10.8.20240310", "pyyaml>=6.0.2", "types-PyYAML>=6.0.12.20241230"]
 requires-python = ">=3.13"
 readme = "README.md"
 license = {text = "MIT"}

@@ -6,6 +6,9 @@ import re
 from dataclasses import dataclass
 from datetime import datetime
 
+import toml
+import yaml
+
 from pydenote.resources.__version__ import __version__ as __version__
 
 
@@ -65,7 +68,17 @@ class Attributes:
             self.set_title(self.date.strftime("%A %d %B %Y"))
 
     def get_frontmatter(self, istoml: bool = True) -> str:
-        return "Cica"
+        oudi = {
+            "title": self.title,
+            "date": self.date.strftime("%Y-%m-%dT%H:%M:%S"),
+            "tags": self.keywords,
+            "identifier": self.id,
+        }
+        if istoml:
+            rets = f"+++\n{toml.dumps(oudi)}+++\n"
+        else:
+            rets = f"---\n{yaml.dump(oudi)}---\n"
+        return rets
 
 
 class NewNote:
