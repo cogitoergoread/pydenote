@@ -39,6 +39,7 @@ lint.select = [
 lint.ignore = [
     "E501", # line-too-long
     "W191", # tab-indentation
+    "I001",
 ]
 include = ["**/*.py", "**/*.pyi", "**/pyproject.toml"]
 exclude = ["**/__versions__.py"]

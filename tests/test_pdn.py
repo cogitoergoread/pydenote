@@ -1,6 +1,7 @@
 """Python Denote New command tests"""
 
 import pytest
+
 from pydenote.pdn import NewNote
 
 
