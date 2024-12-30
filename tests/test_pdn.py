@@ -1,8 +1,19 @@
 """Python Denote New command tests"""
 
+import os
+from collections.abc import Generator
+from typing import Any
+from unittest import mock
+
 import pytest
 
 from pydenote.pdn import NewNote
+
+
+@pytest.fixture
+def mock_settings_env_vars() -> Generator[None, Any]:
+    with mock.patch.dict(os.environ, {"DENOTE_HOME": "/tmp"}):
+        yield
 
 
 def test_set_title() -> None:
@@ -91,3 +102,14 @@ def test_get_frontmatter(ismd: bool, res: str, journal: NewNote) -> None:
 def test_get_filename(journal: NewNote) -> None:
     fname = "20240203T122345--saturday-03-february-2024_journal.md"
     assert journal.at.get_filename() == fname
+
+
+def test_chk_dir_param() -> None:
+    nn = NewNote()
+    assert nn.chk_dir("/tmp")
+    assert not nn.chk_dir("/bin")
+
+
+def test_chk_dir_envir(mock_settings_env_vars: Generator[None, Any]) -> None:
+    nn = NewNote()
+    assert nn.chk_dir("")

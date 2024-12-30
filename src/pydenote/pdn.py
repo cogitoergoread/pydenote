@@ -2,7 +2,10 @@
 See original (Emacs lisp) docs at https://protesilaos.com/emacs/denote"""
 
 import argparse
+import os
+import pathlib
 import re
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -126,12 +129,20 @@ class NewNote:
     def __init__(self) -> None:
         self.at = Attributes("", [], datetime.now(), "")
 
+    def chk_dir(self, dir: str) -> bool:
+        home_dir = dir if dir else os.environ.get("DENOTE_HOME", ".")
+        if not os.path.exists(home_dir) or not os.access(home_dir, os.W_OK):
+            print(f"Folder {home_dir} is not ready for writing files.")
+            return False
+        self.path = home_dir
+        return True
+
     def main(self) -> None:
         logstr = f"pdn (Python Denote new) version {__version__} starting..."
         print(logstr)
         parser = argparse.ArgumentParser(
             description="Create new denote file.",
-            epilog="New Markdown file is placed to --denote-home or DENOTE_HOME.",
+            epilog="New Markdown file is placed to --denotehome or DENOTE_HOME.",
         )
         group = parser.add_mutually_exclusive_group()
         group.add_argument(
@@ -151,8 +162,8 @@ class NewNote:
             type=str,
             help="Date and time of a note, eg. 2024-12-31 23:59:59",
         )
+        parser.add_argument("--denotehome", type=pathlib.Path)
         args = parser.parse_args()
-        print(args)
 
         if args.date:
             if not self.at.set_date(args.date):
@@ -164,9 +175,17 @@ class NewNote:
             self.at.set_title(args.title)
         elif args.journal:
             self.at.set_journal()
+        if not self.chk_dir(args.denotehome):
+            exit(0)
 
         self.at.set_id()
-        print(f"Ok. At:{self.at}")
+
+        print("Type some text for your note. [Ctrl-D] to finish.")
+        fname = os.path.join(self.path, self.at.get_filename())
+        with open(fname, "w") as file:
+            file.write(self.at.get_frontmatter())
+            for line in sys.stdin:
+                file.write(line)
 
 
 def main() -> None:
