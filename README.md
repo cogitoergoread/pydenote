@@ -1,6 +1,8 @@
 # pydenote
 Utilities for Denote naming scheme notes.
 
+See the original Emacs related manual, written by Protesilaos Stavrou: <https://protesilaos.com/emacs/denote>
+
 ## pdn
 
 `pdn` is for creating a new note. Usage:

@@ -3,7 +3,6 @@
 import io
 import os
 from collections.abc import Generator
-from pathlib import Path
 import pathlib
 import sys
 from typing import Any
