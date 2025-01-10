@@ -1,13 +1,17 @@
 """Python Denote New command tests"""
 
+import io
 import os
 from collections.abc import Generator
+from pathlib import Path
+import pathlib
+import sys
 from typing import Any
 from unittest import mock
 
 import pytest
 
-from pydenote.pdn import NewNote
+from pydenote.pdn import NewNote, main
 
 
 @pytest.fixture
@@ -113,3 +117,23 @@ def test_chk_dir_param() -> None:
 def test_chk_dir_envir(mock_settings_env_vars: Generator[None, Any]) -> None:
     nn = NewNote()
     assert nn.chk_dir("")
+
+def test_main(monkeypatch:pytest.MonkeyPatch,tmp_path:pathlib.Path) -> None:
+    """Mintha parancssorból hívtuk volna
+    """
+    myargs=[ "--denotehome", tmp_path.__str__(), "-t", "titlesample", "-k", "keysample", "-d", "20241231T235959"]
+    with monkeypatch.context() as m:
+        m.setattr(sys, 'argv', ['pdn', ]+ myargs)
+        m.setattr('sys.stdin', io.StringIO('Cica'))
+
+        main()
+
+    note="""+++
+title = "titlesample"
+date = "2024-12-31T23:59:59"
+tags = [ "keysample",]
+identifier = "20241231T235959"
++++
+Cica"""
+    p = tmp_path / "20241231T235959--titlesample_keysample.md"
+    assert p.read_text(encoding="utf-8") == note
