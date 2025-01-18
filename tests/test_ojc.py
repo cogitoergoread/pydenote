@@ -1,3 +1,4 @@
+import filecmp
 import os
 import pathlib
 import sys
@@ -34,9 +35,6 @@ def test_main_nofile(
         )
         with pytest.raises(SystemExit):
             main()
-            out, err = capsys.readouterr()
-
-            print(out, err)
 
 
 def test_main_shortfile(
@@ -64,3 +62,5 @@ def test_main_shortfile(
         out, err = capsys.readouterr()
 
         print(out, err)
+        fname = "20200531T190600--first-note_journal.md"
+        assert filecmp.cmp(f"tests/resources/{fname}", f"{tmp_path.__str__()}/{fname}")
