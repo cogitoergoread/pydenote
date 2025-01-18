@@ -29,12 +29,12 @@ class OrgJournal(DeNote):
         Returns:
             tuple: ([Date], Title])
         """
-        split1 = headstr[6:-1].split("] ")
+        split1 = headstr[6:-1].split("]")
         split2 = split1[0].split(" ")
         dstr = f"{split2[0]} {split2[2]}:00"
         dc = DateChecker(dstr)
         _ = dc.check_date()
-        return (dc.checked, split1[1])
+        return (dc.checked, split1[1].strip())
 
     def close(self) -> None:
         """Close outfile in case it is open."""
@@ -56,14 +56,14 @@ class OrgJournal(DeNote):
             self.close()
             self.actdate = dt
             # New file should be written
-            at = Attributes(title, ["journal"], dt, "")
+            at = Attributes(dt.strftime("%Y %B"), ["journal"], dt, "")
             at.set_id()
             print(f"Start new file, for month {dt.__str__()}.")
             fname = os.path.join(self.path, at.get_filename())
             self.outfile = open(fname, "w")
             self.outfile.write(at.get_frontmatter())
         if self.outfile:
-            self.outfile.write(f"# {dt.__str__()} - {title}")
+            self.outfile.write(f"# {dt.__str__()} - {title}\n")
 
     def process_infile(self) -> None:
         """Process Org journal file, line - by line"""

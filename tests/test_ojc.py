@@ -8,7 +8,30 @@ from unittest import mock
 
 import pytest
 
-from pydenote.ojc import main
+from pydenote.ojc import OrgJournal, main
+
+
+@pytest.mark.parametrize(
+    "ps,rdt,rti",
+    [
+        (
+            "**** [2020-07-09 Thu 05:59] Kedd - szerda, Éva el\n",
+            "2020-07-09 05:59:00",
+            "Kedd - szerda, Éva el",
+        ),
+        (
+            "**** [2020-07-07 Tue 05:45]Vasárnap - hétfő\n",
+            "2020-07-07 05:45:00",
+            "Vasárnap - hétfő",
+        ),
+    ],
+)
+def test_parsehead(ps: str, rdt: str, rti: str) -> None:
+    """Test Heading4 parser"""
+    oj = OrgJournal()
+    retdt, retti = oj.parse_heading(ps)
+    assert retdt.__str__() == rdt
+    assert retti == rti
 
 
 @pytest.fixture
@@ -62,5 +85,5 @@ def test_main_shortfile(
         out, err = capsys.readouterr()
 
         print(out, err)
-        fname = "20200531T190600--first-note_journal.md"
+        fname = "20200531T190600--2020-may_journal.md"
         assert filecmp.cmp(f"tests/resources/{fname}", f"{tmp_path.__str__()}/{fname}")
