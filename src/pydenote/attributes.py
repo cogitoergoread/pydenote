@@ -11,6 +11,54 @@ import yaml
 from pydenote.resources.__version__ import __version__ as __version__
 
 
+class DateChecker:
+    indate: str
+    checked: datetime
+
+    def __init__(self, indate: str) -> None:
+        self.indate = indate
+
+    def check_date(self) -> bool:
+        """Returns whether self.indate well formatted
+            Sets self.checked with datetime value
+            self.indate Good formatted date, eg 2024-12-24 23:59:59
+
+        Returns:
+            bool: Is pdate valid date
+        """
+        # Better (0[1-9]|1[0-2]) ([0-2][0-9]|3[01])
+        fp_datum = re.compile(
+            r"^(?P<year>\d{4})[\.\- ]?(?P<month>[01]\d)[\.\- ]?(?P<day>[0123]\d)$",
+            re.UNICODE,
+        )
+        match = fp_datum.search(self.indate)
+        if match is not None:
+            # Short date found
+            dtstr = f"{match.group('year')}-{match.group('month')}-{match.group('day')}"
+            try:
+                self.checked = datetime.strptime(dtstr, "%Y-%m-%d")
+            except ValueError:
+                return False
+            return True
+        # Date + Time
+        fp_datum = re.compile(
+            r"^(?P<year>\d{4})[\.\- ]?(?P<month>[01]\d)[\.\- ]?(?P<day>[0123]\d)[T ]?(?P<hour>\d{2})[\.\: ]?(?P<min>\d{2})[\.\: ]?(?P<sec>\d{2})$",
+            re.UNICODE,
+        )
+        match = fp_datum.search(self.indate)
+
+        if match is not None:
+            # Date + Time found
+            dtstr = f"{match.group('year')}-{match.group('month')}-{match.group('day')} {match.group('hour')}:{match.group('min')}:{match.group('sec')}"
+            try:
+                self.checked = datetime.strptime(dtstr, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                return False
+            return True
+
+        return False
+
+
 @dataclass(frozen=False)
 class Attributes:
     title: str
@@ -36,44 +84,10 @@ class Attributes:
         self.keywords = nkw.split(" ")
 
     def set_date(self, pdate: str) -> bool:
-        """Checks the 'date' parameter
-
-        Args:
-            pdate (str): Good formatted date, eg 2024-12-24 23:59:59
-
-        Returns:
-            bool: Is pdate valid date
-        """
-        # Better (0[1-9]|1[0-2]) ([0-2][0-9]|3[01])
-        fp_datum = re.compile(
-            r"^(?P<year>\d{4})[\.\- ]?(?P<month>[01]\d)[\.\- ]?(?P<day>[0123]\d)$",
-            re.UNICODE,
-        )
-        match = fp_datum.search(pdate)
-        if match is not None:
-            # Short date found
-            dtstr = f"{match.group('year')}-{match.group('month')}-{match.group('day')}"
-            try:
-                self.date = datetime.strptime(dtstr, "%Y-%m-%d")
-            except ValueError:
-                return False
+        dc = DateChecker(pdate)
+        if dc.check_date():
+            self.date = dc.checked
             return True
-        # Date + Time
-        fp_datum = re.compile(
-            r"^(?P<year>\d{4})[\.\- ]?(?P<month>[01]\d)[\.\- ]?(?P<day>[0123]\d)[T ]?(?P<hour>\d{2})[\.\: ]?(?P<min>\d{2})[\.\: ]?(?P<sec>\d{2})$",
-            re.UNICODE,
-        )
-        match = fp_datum.search(pdate)
-
-        if match is not None:
-            # Date + Time found
-            dtstr = f"{match.group('year')}-{match.group('month')}-{match.group('day')} {match.group('hour')}:{match.group('min')}:{match.group('sec')}"
-            try:
-                self.date = datetime.strptime(dtstr, "%Y-%m-%d %H:%M:%S")
-            except ValueError:
-                return False
-            return True
-
         return False
 
     def set_id(self) -> None:

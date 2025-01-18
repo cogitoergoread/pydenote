@@ -24,3 +24,23 @@ options:
 
 New Markdown file is placed to --denotehome or DENOTE_HOME.
 ```
+
+## ojc
+
+Org-mode journal converter. Usage:
+
+```text
+usage: ojc [-h] -i INFILE [--journalhome JOURNALHOME]
+
+Convert Org-mode Journal file.
+
+options:
+  -h, --help            show this help message and exit
+  -i, --infile INFILE   Name of the Org Journal file
+  --journalhome JOURNALHOME
+                        Folder of the journal files.
+
+New Markdown files are placed to --journalhome or JOURNAL_HOME.
+```
+
+

@@ -2,9 +2,9 @@
 
 import io
 import os
-from collections.abc import Generator
 import pathlib
 import sys
+from collections.abc import Generator
 from typing import Any
 from unittest import mock
 
@@ -109,25 +109,41 @@ def test_get_filename(journal: NewNote) -> None:
 
 def test_chk_dir_param() -> None:
     nn = NewNote()
-    assert nn.chk_dir("/tmp")
-    assert not nn.chk_dir("/bin")
+    assert nn.chk_dir("/tmp", "DENOTE_HOME")
+    assert not nn.chk_dir("/bin", "DENOTE_HOME")
 
 
 def test_chk_dir_envir(mock_settings_env_vars: Generator[None, Any]) -> None:
     nn = NewNote()
-    assert nn.chk_dir("")
+    assert nn.chk_dir("", "DENOTE_HOME")
 
-def test_main(monkeypatch:pytest.MonkeyPatch,tmp_path:pathlib.Path) -> None:
-    """Mintha parancssorból hívtuk volna
-    """
-    myargs=[ "--denotehome", tmp_path.__str__(), "-t", "titlesample", "-k", "keysample", "-d", "20241231T235959"]
+
+def test_main(monkeypatch: pytest.MonkeyPatch, tmp_path: pathlib.Path) -> None:
+    """Emulating command line arguments"""
+    myargs = [
+        "--denotehome",
+        tmp_path.__str__(),
+        "-t",
+        "titlesample",
+        "-k",
+        "keysample",
+        "-d",
+        "20241231T235959",
+    ]
     with monkeypatch.context() as m:
-        m.setattr(sys, 'argv', ['pdn', ]+ myargs)
-        m.setattr('sys.stdin', io.StringIO('Cica'))
+        m.setattr(
+            sys,
+            "argv",
+            [
+                "pdn",
+            ]
+            + myargs,
+        )
+        m.setattr("sys.stdin", io.StringIO("Cica"))
 
         main()
 
-    note="""+++
+    note = """+++
 title = "titlesample"
 date = "2024-12-31T23:59:59"
 tags = [ "keysample",]

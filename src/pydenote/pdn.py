@@ -8,22 +8,15 @@ import sys
 from datetime import datetime
 
 from pydenote.attributes import Attributes
+from pydenote.denote import DeNote
 from pydenote.resources.__version__ import __version__ as __version__
 
 
-class NewNote:
+class NewNote(DeNote):
     at: Attributes
 
     def __init__(self) -> None:
         self.at = Attributes("", [], datetime.now(), "")
-
-    def chk_dir(self, dir: str) -> bool:
-        home_dir = dir if dir else os.environ.get("DENOTE_HOME", ".")
-        if not os.path.exists(home_dir) or not os.access(home_dir, os.W_OK):
-            print(f"Folder {home_dir} is not ready for writing files.")
-            return False
-        self.path = home_dir
-        return True
 
     def main(self) -> None:
         logstr = f"pdn (Python Denote new) version {__version__} starting..."
@@ -50,7 +43,9 @@ class NewNote:
             type=str,
             help="Date and time of a note, eg. 2024-12-31 23:59:59",
         )
-        parser.add_argument("--denotehome", type=pathlib.Path, help="Folder of the notes")
+        parser.add_argument(
+            "--denotehome", type=pathlib.Path, help="Folder of the notes"
+        )
         args = parser.parse_args()
 
         if args.date:
@@ -63,7 +58,7 @@ class NewNote:
             self.at.set_title(args.title)
         elif args.journal:
             self.at.set_journal()
-        if not self.chk_dir(args.denotehome):
+        if not self.chk_dir(args.denotehome, "DENOTE_HOME"):
             exit(0)
 
         self.at.set_id()
