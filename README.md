@@ -24,3 +24,7 @@ options:
 
 New Markdown file is placed to --denotehome or DENOTE_HOME.
 ```
+
+## ojc
+
+Org-mode journal converter.
