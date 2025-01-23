@@ -43,4 +43,22 @@ options:
 New Markdown files are placed to --journalhome or JOURNAL_HOME.
 ```
 
+## zdc
 
+Zettedeft ote conversion to Denote.
+
+```text
+zdc -h
+zdc (Zettle deft note converter) version 1.0.1.dev2 starting...
+usage: zdc [-h] -i INFILE [--denotehome DENOTEHOME]
+
+Convert a ZettleDeft file to denote.
+
+options:
+  -h, --help            show this help message and exit
+  -i, --infile INFILE   Name of ZettleDeft file
+  --denotehome DENOTEHOME
+                        Folder of the notes
+
+New Markdown file is placed to --denotehome or DENOTE_HOME.
+```

@@ -15,5 +15,12 @@
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
     "editor.rulers": [88]
-  }
+  },
+  "mypy-type-checker.interpreter": [
+    "/usrdata/home/muszi/gwork/repos/pydenote/.direnv/python-3.13.1/bin/python"
+  ],
+  "python.defaultInterpreterPath": "/usrdata/home/muszi/gwork/repos/pydenote/.direnv/python-3.13.1/bin/python",
+  "ruff.interpreter": [
+    "/usrdata/home/muszi/gwork/repos/pydenote/.direnv/python-3.13.1/bin/python"
+  ]
 }

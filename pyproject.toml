@@ -90,6 +90,7 @@ exclude =  [
 [project.scripts]
 pdn = "pydenote.pdn:main"
 ojc = "pydenote.ojc:main"
+zdc = "pydenote.zdc:main"
 
 [tool.pdm.scripts]
 lint = "ruff check --exclude '**/__version__.py'"

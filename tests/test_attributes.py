@@ -1,6 +1,6 @@
 import pytest
 
-from pydenote.attributes import DateChecker
+import pydenote.attributes
 
 
 @pytest.mark.parametrize(
@@ -17,7 +17,7 @@ from pydenote.attributes import DateChecker
 )
 def test_dc_sad(dstr: str) -> None:
     """Date checker sad path"""
-    dc = DateChecker(dstr)
+    dc = pydenote.attributes.DateChecker(dstr)
     assert not dc.check_date()
 
 
@@ -31,6 +31,6 @@ def test_dc_sad(dstr: str) -> None:
 )
 def test_dc_happy(dstr: str, res: str) -> None:
     """Date checker happy path"""
-    dc = DateChecker(dstr)
+    dc = pydenote.attributes.DateChecker(dstr)
     assert dc.check_date()
     assert dc.checked.__str__() == res
