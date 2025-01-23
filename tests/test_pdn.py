@@ -10,7 +10,7 @@ from unittest import mock
 
 import pytest
 
-from pydenote.pdn import NewNote, main
+import pydenote.pdn
 
 
 @pytest.fixture
@@ -20,7 +20,7 @@ def mock_settings_env_vars() -> Generator[None, Any]:
 
 
 def test_set_title() -> None:
-    nn = NewNote()
+    nn = pydenote.pdn.NewNote()
     nn.at.set_title("Cica")
     assert nn.at.title == "Cica"
     nn.at.set_title("$+!%÷Cica\n")
@@ -28,7 +28,7 @@ def test_set_title() -> None:
 
 
 def test_set_keywords() -> None:
-    nn = NewNote()
+    nn = pydenote.pdn.NewNote()
     nn.at.set_keywords("Cica")
     assert nn.at.keywords == ["cica"]
     nn.at.set_keywords("Kapa?:,Vágás")
@@ -38,7 +38,7 @@ def test_set_keywords() -> None:
 
 
 def test_set_date() -> None:
-    nn = NewNote()
+    nn = pydenote.pdn.NewNote()
     assert nn.at.set_date("2024.01.02")
     assert nn.at.date.__str__() == "2024-01-02 00:00:00"
     assert nn.at.set_date("2024.02.03 12.23:45")
@@ -55,7 +55,7 @@ def test_set_date() -> None:
 
 
 def test_set_id() -> None:
-    nn = NewNote()
+    nn = pydenote.pdn.NewNote()
     assert nn.at.set_date("2024.02.03 12.23:45")
     assert nn.at.date.__str__() == "2024-02-03 12:23:45"
     nn.at.set_id()
@@ -63,8 +63,8 @@ def test_set_id() -> None:
 
 
 @pytest.fixture
-def journal() -> NewNote:
-    nn = NewNote()
+def journal() -> pydenote.pdn.NewNote:
+    nn = pydenote.pdn.NewNote()
     assert nn.at.set_date("2024.02.03 12.23:45")
     nn.at.set_journal()
     nn.at.set_id()
@@ -97,24 +97,24 @@ title: Saturday 03 February 2024
         ),
     ],
 )
-def test_get_frontmatter(ismd: bool, res: str, journal: NewNote) -> None:
+def test_get_frontmatter(ismd: bool, res: str, journal: pydenote.pdn.NewNote) -> None:
     ret = journal.at.get_frontmatter(ismd)
     assert ret == res
 
 
-def test_get_filename(journal: NewNote) -> None:
+def test_get_filename(journal: pydenote.pdn.NewNote) -> None:
     fname = "20240203T122345--saturday-03-february-2024_journal.md"
     assert journal.at.get_filename() == fname
 
 
 def test_chk_dir_param() -> None:
-    nn = NewNote()
+    nn = pydenote.pdn.NewNote()
     assert nn.chk_dir("/tmp", "DENOTE_HOME")
     assert not nn.chk_dir("/bin", "DENOTE_HOME")
 
 
 def test_chk_dir_envir(mock_settings_env_vars: Generator[None, Any]) -> None:
-    nn = NewNote()
+    nn = pydenote.pdn.NewNote()
     assert nn.chk_dir("", "DENOTE_HOME")
 
 
@@ -141,7 +141,7 @@ def test_main(monkeypatch: pytest.MonkeyPatch, tmp_path: pathlib.Path) -> None:
         )
         m.setattr("sys.stdin", io.StringIO("Cica"))
 
-        main()
+        pydenote.pdn.main()
 
     note = """+++
 title = "titlesample"

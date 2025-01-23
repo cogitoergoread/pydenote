@@ -1,5 +1,7 @@
 # Zettledeft notes
 
+[ZettleDeft documentation](https://www.eliasstorms.net/zetteldeft/)
+
 Markdown files having a `Heading 1' level title in the forst line of a file.
 
 This title is the **field** `title` in denote.

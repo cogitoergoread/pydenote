@@ -8,7 +8,7 @@ from unittest import mock
 
 import pytest
 
-from pydenote.ojc import OrgJournal, main
+import pydenote.ojc
 
 
 @pytest.mark.parametrize(
@@ -28,7 +28,7 @@ from pydenote.ojc import OrgJournal, main
 )
 def test_parsehead(ps: str, rdt: str, rti: str) -> None:
     """Test Heading4 parser"""
-    oj = OrgJournal()
+    oj = pydenote.ojc.OrgJournal()
     retdt, retti = oj.parse_heading(ps)
     assert retdt.__str__() == rdt
     assert retti == rti
@@ -57,7 +57,7 @@ def test_main_nofile(
             + myargs,
         )
         with pytest.raises(SystemExit):
-            main()
+            pydenote.ojc.main()
 
 
 def test_main_shortfile(
@@ -81,9 +81,7 @@ def test_main_shortfile(
             ]
             + myargs,
         )
-        main()
-        out, err = capsys.readouterr()
+        pydenote.ojc.main()
 
-        print(out, err)
         fname = "20200531T190600--2020-may_journal.md"
         assert filecmp.cmp(f"tests/resources/{fname}", f"{tmp_path.__str__()}/{fname}")
