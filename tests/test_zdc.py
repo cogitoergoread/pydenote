@@ -1,3 +1,4 @@
+import filecmp
 import pathlib
 import sys
 
@@ -49,5 +50,5 @@ def test_main_samplefile(
             + myargs,
         )
         pydenote.zdc.main()
-        # fname = "20200531T190600--2020-may_journal.md"
-        # assert filecmp.cmp(f"tests/resources/{fname}", f"{tmp_path.__str__()}/{fname}")
+        fname = "20211027T054100--connections-of-notes_connection_note_ZettelkastenMethod.md"
+        assert filecmp.cmp(f"tests/resources/{fname}", f"{tmp_path.__str__()}/{fname}")

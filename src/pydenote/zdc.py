@@ -3,6 +3,7 @@
 import argparse
 import os
 import pathlib
+import re
 
 from pydenote.attributes import Attributes, DateChecker
 from pydenote.denote import DeNote
@@ -21,7 +22,8 @@ class ZettleConv(DeNote):
         title = " ".join(split2[1:])
         dc = DateChecker(dtstr)
         _ = dc.check_date()
-
+        p = re.compile(r"\[\[(\d{4})-(\d{2})-(\d{2})-(\d{2})(\d{2})\]\](.*)$")
+        subst = r"[\6](denote:\1\2\3T\4\5\0600)"
         linenr = 0
         for line in self.infile:
             linenr += 1
@@ -42,12 +44,12 @@ class ZettleConv(DeNote):
                 self.outfile.write(at.get_frontmatter())
                 if line[0] != "#":
                     if self.outfile:
-                        self.outfile.write(line)
+                        self.outfile.write(re.sub(p, subst, line))
 
             else:
                 # Write the line to outfile
                 if self.outfile:
-                    self.outfile.write(line)
+                    self.outfile.write(re.sub(p, subst, line))
 
     def main(self) -> None:
         logstr = f"zdc (Zettle deft note converter) version {__version__} starting..."
