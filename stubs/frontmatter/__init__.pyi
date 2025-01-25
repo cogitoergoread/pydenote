@@ -1,7 +1,7 @@
 import io
 from .default_handlers import BaseHandler
 from _typeshed import Incomplete
-from typing import Iterable
+from collections.abc import Iterable
 
 __all__ = ["parse", "load", "loads", "dump", "dumps"]
 
