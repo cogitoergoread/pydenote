@@ -152,3 +152,43 @@ identifier = "20241231T235959"
 Cica"""
     p = tmp_path / "20241231T235959--titlesample_keysample.md"
     assert p.read_text(encoding="utf-8") == note
+
+
+def test_pdn_nofile(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: pathlib.Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Emulating command line arguments, no file found"""
+    myargs = ["--denotehome", tmp_path.__str__(), "--infile", "/ne.md"]
+    with monkeypatch.context() as m:
+        m.setattr(
+            sys,
+            "argv",
+            [
+                "ojc",
+            ]
+            + myargs,
+        )
+        with pytest.raises(SystemExit):
+            pydenote.pdn.main()
+
+
+def test_pdn_baddate(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: pathlib.Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Emulating command line arguments, no file found"""
+    myargs = ["-d", "20251332"]
+    with monkeypatch.context() as m:
+        m.setattr(
+            sys,
+            "argv",
+            [
+                "ojc",
+            ]
+            + myargs,
+        )
+        with pytest.raises(SystemExit):
+            pydenote.pdn.main()
