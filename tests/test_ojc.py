@@ -1,10 +1,6 @@
 import filecmp
-import os
 import pathlib
 import sys
-from collections.abc import Generator
-from typing import Any
-from unittest import mock
 
 import pytest
 
@@ -32,12 +28,6 @@ def test_parsehead(ps: str, rdt: str, rti: str) -> None:
     retdt, retti = oj.parse_heading(ps)
     assert retdt.__str__() == rdt
     assert retti == rti
-
-
-@pytest.fixture
-def mock_settings_env_vars() -> Generator[None, Any]:
-    with mock.patch.dict(os.environ, {"JOURNAL_HOME": "/tmp"}):
-        yield
 
 
 def test_main_nofile(

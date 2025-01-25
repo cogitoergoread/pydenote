@@ -20,17 +20,19 @@ class DenoteMove(DeNote):
         """Rename file based on frontmatter"""
         # Read toml frontmatter
         fm = frontmatter.load(self.infile)
-        self.infile.cose()
+        self.infile.close()
 
         # fm should have all keys
-        if fm.keys() != ["title", "date", "tags", "identifier"]:
-            print(f"Frontmatter has not enough keys {fm.keys}")
+        if set(fm.keys()) != {"title", "date", "tags", "identifier"}:
+            print(f"Frontmatter has not enough keys {fm.keys()}")
             exit(0)
 
         # Buld up attributes
+        arr: list[str] = []
+        arr = fm["tags"]  # type: ignore
         self.at = Attributes(
             str(fm["title"]),
-            fm["tags"],
+            arr,
             datetime.strptime(str(fm["date"]), "%Y-%m-%dT%H:%M:%S"),
             "",
         )
@@ -41,6 +43,7 @@ class DenoteMove(DeNote):
             source = os.path.join(self.filepath, self.filename)
             dest = os.path.join(self.filepath, self.at.get_filename())
             os.rename(source, dest)
+            print(f"File {source} is os renamed to {dest}")
         else:
             # Git move
             cmd = f"git mv {self.filename} {self.at.get_filename()}"
@@ -52,13 +55,14 @@ class DenoteMove(DeNote):
                     pass
             except OSError as e:
                 print("Execution failed:", e, file=sys.stderr)
+            print(f"File rename: {cmd}")
 
     def main(self) -> None:
-        logstr = f"pmv ( PyDenote MoVe  version {__version__} starting..."
+        logstr = f"pmv ( PyDenote MoVe )  version {__version__} starting..."
         print(logstr)
         parser = argparse.ArgumentParser(
             description="Rename a Denote file according to its frontmatter",
-            epilog="The file moved in its current location",
+            epilog="The file is renamed in place.",
         )
         parser.add_argument(
             "-i",
@@ -68,10 +72,17 @@ class DenoteMove(DeNote):
             help="Name of Denote file to be renamed.",
         )
         parser.add_argument(
-            "-o", "--osmove", type=str, help="Use os 'mv' instead of default 'git mv'."
+            "-o",
+            "--osmove",
+            action="store_true",
+            help="Use os 'mv' instead of default 'git mv'.",
         )
         args = parser.parse_args()
-        self.isosmv = bool(args.keyword)
+        print(f"OsMove:{args.osmove}")
+        if args.osmove:
+            self.isosmv = True
+        else:
+            self.isosmv = False
         self.infile = args.infile
         self.filename = os.path.basename(args.infile.name)
         self.filepath = os.path.dirname(args.infile.name)

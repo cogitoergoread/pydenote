@@ -62,3 +62,22 @@ options:
 
 New Markdown file is placed to --denotehome or DENOTE_HOME.
 ```
+
+## pmv
+
+Usage:
+
+```text
+pmv -h
+pmv ( PyDenote MoVe ) version 1.1.1.dev2 starting...
+usage: pmv [-h] -i INFILE [-o]
+
+Rename a Denote file according to its frontmatter
+
+options:
+  -h, --help           show this help message and exit
+  -i, --infile INFILE  Name of Denote file to be renamed.
+  -o, --osmove         Use os 'mv' instead of default 'git mv'.
+
+The file is renamed in place.
+```
