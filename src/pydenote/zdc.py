@@ -71,7 +71,7 @@ class ZettleConv(DeNote):
         if not self.chk_dir(args.denotehome, "DENOTE_HOME"):
             exit(0)
 
-        logstr = f"zdc for {args.infile.__str__()}, (Zettle deft note converter) version {__version__}"
+        logstr = f"zdc for {args.infile.name}, (Zettle deft note converter) version {__version__}"
         print(logstr)
         self.infile = args.infile
         self.process_infile()
