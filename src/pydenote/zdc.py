@@ -52,8 +52,6 @@ class ZettleConv(DeNote):
                     self.outfile.write(re.sub(p, subst, line))
 
     def main(self) -> None:
-        logstr = f"zdc (Zettle deft note converter) version {__version__} starting..."
-        print(logstr)
         parser = argparse.ArgumentParser(
             description="Convert a ZettleDeft file to denote.",
             epilog="New Markdown file is placed to --denotehome or DENOTE_HOME.",
@@ -73,6 +71,8 @@ class ZettleConv(DeNote):
         if not self.chk_dir(args.denotehome, "DENOTE_HOME"):
             exit(0)
 
+        logstr = f"zdc for {args.infile.__str__()}, (Zettle deft note converter) version {__version__}"
+        print(logstr)
         self.infile = args.infile
         self.process_infile()
 
