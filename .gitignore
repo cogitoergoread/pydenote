@@ -169,6 +169,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+**/__version__.py
+.python-version
 
 # Direnv
 .direnv
